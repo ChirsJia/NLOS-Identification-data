@@ -3,7 +3,7 @@ path="D:\学习\BaiduNetdiskWorkspace\\浙江大学\\代码库\\data_526\\data_5
 dataset=[]
 for i in room_name:
     data=pd.read_csv(path+i+'.csv')
-    data.drop(data[(data==0).all(axis=1)].index, inplace=True)
+    data.drop(data[(data==0).all(axis=1)].index, inplace=True)%去掉所有0行
     dataset.append(data)
     
 
