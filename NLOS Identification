@@ -1,0 +1,44 @@
+room_name=["谱减法Corridor","谱减法ROOM-1","谱减法一楼大厅"]
+path="D:\学习\BaiduNetdiskWorkspace\\浙江大学\\代码库\\data_526\\data_526\\信号改\\"
+dataset=[]
+for i in room_name:
+    data=pd.read_csv(path+i+'.csv')
+    data.drop(data[(data==0).all(axis=1)].index, inplace=True)
+    dataset.append(data)
+    
+
+X=pd.concat([dataset[0], dataset[2],dataset[1]])
+features=['kur_power','engy_power','growth_time_power', 'Power_ratio_first','Power_ratio_second','Power_ratio_third',
+          'med_power','rms_power','type']
+
+'''
+跨房间
+'''
+test_results=np.zeros([8,2])
+for i in [0,2]:
+    if(i==2):
+        k=1
+    else:
+        k=0
+    X=pd.concat([dataset[2-i],dataset[1]])
+    X_train=X[features]
+    Y_train=X.iloc[:,-1]
+    X_train.drop(['type'],axis=1,inplace=True)
+    '''
+    测试集导入
+    '''
+    X_test=dataset[i][features]# 导入测试集
+    Y_test=np.array(X_test['type'])
+    X_test.drop(['type'],axis=1,inplace=True)
+    '''xgboost'''
+    for j in range(1,9):
+        X_train_set=X_train[features[0:j]]
+        X_test_set=X_test[features[0:j]]
+        clf = XGBClassifier(seed=27, verbosity=0,use_label_encoder=False) 
+        clf.fit(X_train_set, Y_train)
+        Y_pred=np.array(clf.predict(X_test_set))
+        print("TSET SET ROOM: %d" %(i+1))
+        print(accuracy_score(Y_pred,Y_test))
+        test_results[(j-1),k]=accuracy_score(Y_pred,Y_test)
+final_results=np.mean(test_results,axis=1)
+print(final_results)
