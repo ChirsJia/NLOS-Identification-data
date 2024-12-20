@@ -6,3 +6,5 @@ N. Jia, H. Wang, X. Wang, W. Cui, and Z. Wang, “A novel nlos acoustic signal i
 
 
 Some minor tracks are not included in this code. With slight improvements, this code serves as a demonstration of my paper rather than the original code
+
+We found the results require requirements, we need special package like xgboost==1.2.1 not 2.0.1, sklearn ==1.2 not any other versions. 
